@@ -1,0 +1,88 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Century Gothic, sans-serif;
+    background: darkred;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+#app {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.appContainer {
+    background: bisque;
+    border-radius: 20px;
+    padding: 30px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: black;
+    font-size: 40px;
+}
+
+.columns {
+    display: flex;
+    gap: 25px;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.column {
+    flex: 1;
+    background: aliceblue;
+    border-radius: 15px;
+    padding: 20px;
+    min-height: 600px;
+}
+
+.columHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.columnHeader h2 {
+    font-size: 1.3em;
+    color: #495057;
+    font-weight: 600;
+}
+
+.cardCounter {
+    background: #6c757d;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.column1 .columnHeader {
+    border-bottom-color: black;
+}
+
+.column2 .columnHeader {
+    border-bottom-color: black;
+}
+
+.column3 .columnHeader {
+    border-bottom-color: black;
+}
+
+.cardsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-height: 400px;
+}
