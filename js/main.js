@@ -3,6 +3,10 @@ Vue.component('app', {
     template: `
         <div class="appContainer">
             <h1> Notes </h1>
+            
+            <button @click="addNewCard" class="addButton">
+                + Add new note </button>
+            
             <div class="columns">
                 <column 
                     :column-index="1"
@@ -43,9 +47,23 @@ Vue.component('app', {
     methods: {
         handleProgressUpdate(data) {
             console.log('Progress updated:', data)
-        }
+        },
+
+        addNewCard() {
+            const newCard = {
+                id: this.nextId++,
+                title: `Note ${this.nextId - 1}`,
+                items: [
+                    { text: 'Task 1', completed: false },
+                    { text: 'Task 2', completed: false },
+                    { text: 'Task 3', completed: false }
+                ]
+            };
+
+            this.cards.column1.push(newCard);
+        },
     }
-})
+});
 
 //колонки
 Vue.component('column', {
@@ -81,7 +99,7 @@ Vue.component('column', {
             this.$emit('progress-updated', data)
         }
     }
-})
+});
 
 //карточки
 Vue.component('note-card', {
@@ -176,9 +194,9 @@ Vue.component('note-card', {
             })
         }
     },
-})
+});
 
 //экземпляр Vue
 let app = new Vue({
     el: '#app'
-})
+});

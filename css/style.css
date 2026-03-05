@@ -86,3 +86,14 @@ h1 {
     gap: 15px;
     min-height: 400px;
 }
+
+.addButton {
+    background: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
