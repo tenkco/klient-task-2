@@ -68,15 +68,7 @@ h1 {
     font-weight: 500;
 }
 
-.column1 .columnHeader {
-    border-bottom-color: black;
-}
-
-.column2 .columnHeader {
-    border-bottom-color: black;
-}
-
-.column3 .columnHeader {
+.column2 .columnHeader .column3 .column1{
     border-bottom-color: black;
 }
 
@@ -88,12 +80,97 @@ h1 {
 }
 
 .addButton {
-    background: #4CAF50;
+    background: darkgreen;
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 16px;
     cursor: pointer;
     font-size: 16px;
+    margin: 20px 0;
+}
+
+.createCardForm {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.createCardForm h2 {
+    font-size: 25px;
+    color: black;
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: gray;
+}
+
+.formGroup input[type="text"] {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid gray;
+    border-radius: 8px;
+}
+
+.formGroup input[type="text"]:disabled {
+    background: gray;
+}
+
+.itemInput {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.itemInput input {
+    flex: 1;
+}
+
+.removeItem {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: darkred;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.itemControls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.addItem {
+    padding: 8px 16px;
+    background: bisque;
+    border: none;
+    border-radius: 6px;
+    color: black;
+}
+
+.hint {
+    color: gray;
+}
+
+.errorMessage {
+    color: darkred;
+    font-size: 0.9em;
 }

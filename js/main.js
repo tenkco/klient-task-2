@@ -4,8 +4,11 @@ Vue.component('app', {
         <div class="appContainer">
             <h1> Notes </h1>
             
-            <button @click="addNewCard" class="addButton">
-                + Add new note </button>
+            <create-card-form 
+                :can-create="cards.column1.length < 3"
+                :is-blocked="column1Blocked"
+                @create-card="createCard">
+            </create-card-form>
             
             <div class="columns">
                 <column 
@@ -49,18 +52,13 @@ Vue.component('app', {
             console.log('Progress updated:', data)
         },
 
-        addNewCard() {
+        createCard(cardData) {
             const newCard = {
                 id: this.nextId++,
-                title: `Note ${this.nextId - 1}`,
-                items: [
-                    { text: 'Task 1', completed: false },
-                    { text: 'Task 2', completed: false },
-                    { text: 'Task 3', completed: false }
-                ]
-            };
-
-            this.cards.column1.push(newCard);
+                ...cardData,
+                completedAt: null
+            }
+            this.cards.column1.push(newCard)
         },
     }
 });
@@ -194,6 +192,122 @@ Vue.component('note-card', {
             })
         }
     },
+});
+
+//форма создания карточки
+Vue.component('create-card-form', {
+    props: {
+        canCreate: Boolean,
+        isBlocked: Boolean
+    },
+    template: `
+        <div class="createCardForm">
+            <h2>Create a new note</h2>
+            
+            <div class="formGroup">
+                <label for="cardTitle">Heading</label>
+                <input type="text" 
+                       id="cardTitle" 
+                       v-model="localCard.title" 
+                       placeholder="Enter a title for the note"
+                       :disabled="isBlocked">
+            </div>
+            
+            <div class="formGroup">
+                <label>List items</label>
+                <div v-for="(item, index) in localCard.items" 
+                     :key="index" 
+                     class="itemInput">
+                    <input type="text" 
+                           v-model="item.text" 
+                           :placeholder="'Items ' + (index + 1)"
+                           :disabled="isBlocked">
+                    <button type="button" 
+                            @click="removeItem(index)"
+                            v-if="localCard.items.length > 1 && !isBlocked"
+                            class="removeItem"> - </button>
+                </div>
+                
+                <div class="itemControls" v-if="!isBlocked">
+                    <button type="button" 
+                            @click="addItem"
+                            class="addItem">
+                        + Add item
+                    </button>
+                    <span class="hint">Add as many items as you need</span>
+                </div>
+            </div>
+            
+            <div class="formActions">
+                <button type="button" 
+                        @click="submitCard" 
+                        :disabled="!isFormValid || !canCreate || isBlocked"
+                        class="addButton">
+                    Create a card
+                </button>
+                <span v-if="!isFormValid && !isBlocked" class="errorMessage">
+                    Fill in the title and all the items
+                </span>
+                <span v-if="!canCreate && !isBlocked" class="errorMessage">
+                    The first column is filled
+                </span>
+                <span v-if="isBlocked" class="errorMessage">
+                    The column is blocked
+                </span>
+            </div>
+        </div>
+    `,
+    data() {
+        return {
+            localCard: {
+                title: '',
+                items: [
+                    { text: '', completed: false },
+                    { text: '', completed: false },
+                    { text: '', completed: false },
+                ]
+            }
+        }
+    },
+    computed: {
+        isFormValid() {
+            if (!this.localCard.title.trim()) return false
+            for (let item of this.localCard.items) {
+                if (!item.text.trim()) return false
+            }
+            return true
+        }
+    },
+    methods: {
+        addItem() {
+            this.localCard.items.push({ text: '', completed: false })
+        },
+        removeItem(index) {
+            if (this.localCard.items.length > 1) {
+                this.localCard.items.splice(index, 1)
+            }
+        },
+        submitCard() {
+            if (!this.isFormValid || !this.canCreate || this.isBlocked) return
+
+            this.$emit('create-card', {
+                title: this.localCard.title,
+                items: this.localCard.items.map(item => ({
+                    text: item.text,
+                    completed: false
+                }))
+            })
+
+            this.localCard = {
+                title: '',
+                items: [
+                    { text: '', completed: false },
+                    { text: '', completed: false },
+                    { text: '', completed: false },
+                ]
+            }
+        }
+    }
 });
 
 //экземпляр Vue
