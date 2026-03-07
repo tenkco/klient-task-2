@@ -16,6 +16,7 @@ Vue.component('app', {
                     :cards="cards.column1"
                     title="New"
                     :max-cards="3"
+                    :is-column1-blocked="column1Blocked"
                     @progress-updated="handleProgressUpdate">
                 </column>
                 
@@ -24,6 +25,7 @@ Vue.component('app', {
                     :cards="cards.column2"
                     title="In progress"
                     :max-cards="5"
+                    :is-column1-blocked="column1Blocked"
                     @progress-updated="handleProgressUpdate">
                 </column>
                 
@@ -31,6 +33,7 @@ Vue.component('app', {
                     :column-index="3"
                     :cards="cards.column3"
                     title="Ready"
+                    :is-column1-blocked="column1Blocked"
                     @progress-updated="handleProgressUpdate">
                 </column>
             </div>
@@ -47,19 +50,55 @@ Vue.component('app', {
             column1Blocked: false,
         }
     },
+
+    mounted() {
+        this.loadFromStorage()
+    },
+
     methods: {
-        handleProgressUpdate(data) {
-            console.log('Progress updated:', data)
+        loadFromStorage() {
+            const saved = localStorage.getItem('noteApp')
+            if (saved) {
+                const data = JSON.parse(saved)
+                this.cards = data.cards || { column1: [], column2: [], column3: [] }
+                this.nextId = data.nextId || this.getNextId()
+                this.column1Blocked = data.column1Blocked || false
+            } else {
+                this.createTestData()
+            }
+        },
+
+        saveToStorage() {
+            const data = {
+                cards: this.cards,
+                nextId: this.nextId,
+                column1Blocked: this.column1Blocked
+            }
+            localStorage.setItem('noteApp', JSON.stringify(data))
+        },
+
+        getNextId() {
+            let maxId = 0
+            for (let col in this.cards) {
+                this.cards[col].forEach(card => {
+                    if (card.id > maxId) maxId = card.id
+                })
+            }
+            return maxId + 1
         },
 
         createCard(cardData) {
+            if (this.cards.column1.length >= 3 || this.column1Blocked) return
+
             const newCard = {
                 id: this.nextId++,
                 ...cardData,
                 completedAt: null
             }
             this.cards.column1.push(newCard)
+            this.saveToStorage()
         },
+
     }
 });
 
