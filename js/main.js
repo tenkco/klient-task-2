@@ -115,7 +115,31 @@ Vue.component('app', {
             this.cards[toCol].push(movedCard)
         },
 
+        checkColumn1Blocked() {
+            const isColumn2Full = this.cards.column2.length >= 5
 
+            if (isColumn2Full) {
+                this.column1Blocked = true
+            } else {
+                this.column1Blocked = false
+            }
+
+            for (let i = this.cards.column2.length - 1; i >= 0; i--) {
+                const card = this.cards.column2[i]
+                const completedCount = card.items.filter(item => item.completed).length
+                const progress = (completedCount / card.items.length) * 100
+
+                if (progress === 100) {
+                    const [movedCard] = this.cards.column2.splice(i, 1)
+                    if (!movedCard.completedAt) {
+                        movedCard.completedAt = new Date().toISOString()
+                    }
+                    this.cards.column3.push(movedCard)
+                }
+            }
+
+            this.saveToStorage()
+        },
 
     }
 });
