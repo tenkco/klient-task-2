@@ -99,6 +99,24 @@ Vue.component('app', {
             this.saveToStorage()
         },
 
+        moveCard(cardId, fromColumn, toColumn, isComplete = false) {
+            const fromCol = `column${fromColumn}`;
+            const toCol = `column${toColumn}`;
+
+            const cardIndex = this.cards[fromCol].findIndex(c => c.id === cardId)
+            if (cardIndex === -1) return
+
+            const [movedCard] = this.cards[fromCol].splice(cardIndex, 1)
+
+            if (isComplete && !movedCard.completedAt) {
+                movedCard.completedAt = new Date().toISOString()
+            }
+
+            this.cards[toCol].push(movedCard)
+        },
+
+
+
     }
 });
 
