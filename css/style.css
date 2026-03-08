@@ -166,10 +166,6 @@ h1 {
     color: black;
 }
 
-.hint {
-    color: gray;
-}
-
 .errorMessage {
     color: darkred;
     font-size: 0.9em;

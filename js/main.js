@@ -63,8 +63,6 @@ Vue.component('app', {
                 this.cards = data.cards || { column1: [], column2: [], column3: [] }
                 this.nextId = data.nextId || this.getNextId()
                 this.column1Blocked = data.column1Blocked || false
-            } else {
-                this.createTestData()
             }
         },
 
@@ -143,8 +141,7 @@ Vue.component('app', {
 
         handleProgressUpdate(data) {
             const { cardId, progress, columnIndex } = data
-
-            const sourceColumn = column${columnIndex};
+            const sourceColumn = `column${columnIndex}`;
             const card = this.cards[sourceColumn].find(c => c.id === cardId)
             if (!card) return
 
@@ -220,8 +217,7 @@ Vue.component('note-card', {
     template: `
         <div class="noteCard" :class="{ 
             'completed': isCompleted,
-            'blocked': isBlocked 
-        }">
+            'blocked': isBlocked }">
             <h3>{{ card.title || 'New note' }}</h3>
             <p class="placeholder">There will be tasks here,</p>
             
@@ -253,9 +249,7 @@ Vue.component('note-card', {
                 Completed: {{ formatDate(card.completedAt) }}
             </div>
             
-            <div v-if="isBlocked" class="blockedMessage">
-                Editing is blocked
-            </div>
+            <div v-if="isBlocked" class="blockedMessage">Editing is blocked</div>
             
         </div>
     `,
@@ -336,7 +330,6 @@ Vue.component('create-card-form', {
                             class="addItem">
                         + Add item
                     </button>
-                    <span class="hint">Add as many items as you need</span>
                 </div>
             </div>
             
