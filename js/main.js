@@ -141,6 +141,27 @@ Vue.component('app', {
             this.saveToStorage()
         },
 
+        handleProgressUpdate(data) {
+            const { cardId, progress, columnIndex } = data
+
+            const sourceColumn = column${columnIndex};
+            const card = this.cards[sourceColumn].find(c => c.id === cardId)
+            if (!card) return
+
+            if (progress === 100) {
+                if (columnIndex !== 3) {
+                    this.moveCard(cardId, columnIndex, 3, true)
+                }
+            } else if (progress >= 50 && columnIndex === 1) {
+                if (this.cards.column2.length < 5) {
+                    this.moveCard(cardId, 1, 2)
+                }
+            }
+
+            this.checkColumn1Blocked()
+            this.saveToStorage()
+        },
+
     }
 });
 
