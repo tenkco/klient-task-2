@@ -170,3 +170,8 @@ h1 {
     color: darkred;
     font-size: 0.9em;
 }
+
+.search-container {
+    margin-top: 30px;
+    padding: 20px;
+}
