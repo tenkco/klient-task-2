@@ -101,7 +101,7 @@ Vue.component('app', {
         },
 
         createCard(cardData) {
-            if (this.cards.column1.length >= 3 || this.column1Blocked) return
+            if (this.cards.column1.length >= 3) return
 
             const newCard = {
                 id: this.nextId++,
@@ -109,7 +109,6 @@ Vue.component('app', {
                 completedAt: null
             }
             this.cards.column1.push(newCard)
-            this.saveToStorage()
         },
 
         reorderCards(data) {
@@ -137,7 +136,18 @@ Vue.component('app', {
         },
 
         checkColumn1Blocked() {
-            this.column1Blocked = this.cards.column2.length >= 5
+            const isColumn2Full = this.cards.column2.length >= 5
+
+            if (!isColumn2Full) {
+                this.column1Blocked = false
+            } else {
+                const hasCardAbove50 = this.cards.column1.some(card => {
+                    const completedCount = card.items.filter(item => item.completed).length
+                    const progress = (completedCount / card.items.length) * 100
+                    return progress > 50
+                })
+                this.column1Blocked = hasCardAbove50
+            }
 
             for (let i = this.cards.column2.length - 1; i >= 0; i--) {
                 const card = this.cards.column2[i]
@@ -166,14 +176,13 @@ Vue.component('app', {
                 if (columnIndex !== 3) {
                     this.moveCard(cardId, columnIndex, 3, true)
                 }
-            } else if (progress >= 50 && columnIndex === 1) {
+            } else if (progress > 50 && columnIndex === 1) {
                 if (this.cards.column2.length < 5) {
                     this.moveCard(cardId, 1, 2)
                 }
             }
 
             this.checkColumn1Blocked()
-            this.saveToStorage()
         },
 
     }
@@ -195,7 +204,6 @@ Vue.component('column', {
         <div class="column" :class="'column-' + columnIndex">
             <div class="columHeader">
                 <h2>{{ title }}</h2>
-                <span class="cardCounter">{{ cards.length }}{{ maxCards !== Infinity ? '/' + maxCards : '' }}</span>
             </div>
             <div class="cardsContainer"
                 @dragover.prevent
@@ -285,7 +293,6 @@ Vue.component('note-card', {
         @dragend="onDragEnd">
             <div class="drag-handle" v-if="!isBlocked">:::</div>
             <h3>{{ card.title || 'New note' }}</h3>
-            <p class="placeholder">There will be tasks here,</p>
             
             <div class="progressContainer">
                 <div class="progressBar">
@@ -312,10 +319,10 @@ Vue.component('note-card', {
             </ul>
             
              <div v-if="isCompleted && card.completedAt" class="completedDate">
-                Completed: {{ formatDate(card.completedAt) }}
+                Готово: {{ formatDate(card.completedAt) }}
             </div>
             
-            <div v-if="isBlocked" class="blockedMessage">Editing is blocked</div>
+            <div v-if="isBlocked" class="blockedMessage">Редактирование заблокировано</div>
             
         </div>
     `,
@@ -513,7 +520,7 @@ Vue.component('card-search', {
                     placeholder="Поиск"
                     class="itemInput"
                 >
-                <span v-if="searchQuery" @click="clearSearch">Close</span>
+                <span v-if="searchQuery" @click="clearSearch">Закрыть</span>
             </div>
 
             <div v-if="searchQuery">
